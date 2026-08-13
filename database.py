@@ -6,22 +6,21 @@ import os
 # Load environment variables
 load_dotenv()
 
-# Read the database connection string
+# Read database connection string
 connection_str = os.getenv("DATABASE_URL")
 
-# Create the SQLAlchemy engine
+# Create database engine
 engine = create_engine(
     connection_str,
     pool_pre_ping=True
 )
 
-# Create a session factory
+# Configure the session
 SessionFactory = sessionmaker(
     bind=engine,
-    autoflush=False, 
+    autoflush=False,
     autocommit=False
 )
 
-# Base class for all models
+# Create the base class
 Base = declarative_base()
-

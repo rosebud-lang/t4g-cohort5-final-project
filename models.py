@@ -1,17 +1,19 @@
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from uuid import uuid4
-
 from database import Base
 
-#Generate a unique ID for every new database record
+
+# Generate a unique ID for every new database record
 def generate_uuid():
     """Generate a unique UUID."""
     return str(uuid4())
 
+
 # =========================
 # CLIENT MODEL
 # =========================
+
 class Client(Base):
     """Represents a client of the embroidery business."""
 
@@ -55,8 +57,10 @@ class Client(Base):
             f"Client ID: {self.id}, "
             f"Name: {self.name}, "
             f"Phone: {self.phone}, "
+            f"Email: {self.email}, "
             f"Organization: {self.organization_name}"
         )
+
 
 # =========================
 # ORDER MODEL
@@ -105,7 +109,7 @@ class Order(Base):
     )
 
     due_date = Column(
-        String(20),
+        Date,
         nullable=True
     )
 
@@ -130,12 +134,13 @@ class Order(Base):
     def __str__(self):
         return (
             f"Order ID: {self.id}, "
+            f"Client ID: {self.client_id}, "
             f"Item: {self.item_type}, "
             f"Quantity: {self.quantity}, "
             f"Total Amount: {self.total_amount}, "
+            f"Due Date: {self.due_date}, "
             f"Status: {self.status}"
         )
-
 
 
 # =========================
@@ -175,7 +180,7 @@ class Payment(Base):
     )
 
     payment_date = Column(
-        String(20),
+        Date,
         nullable=False
     )
 
@@ -188,8 +193,9 @@ class Payment(Base):
     def __str__(self):
         return (
             f"Payment ID: {self.id}, "
+            f"Order ID: {self.order_id}, "
             f"Amount: {self.amount}, "
             f"Type: {self.payment_type}, "
-            f"Method: {self.payment_method}"
+            f"Method: {self.payment_method}, "
+            f"Payment Date: {self.payment_date}"
         )
-

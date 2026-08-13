@@ -23,6 +23,14 @@ class ClientResponse(ClientCreate):
     class Config:
         from_attributes = True
 
+class ClientUpdate(BaseModel):
+    """Schema for updating client information."""
+
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    organization_name: Optional[str] = None 
+
 
 # ==========================
 # ORDER SCHEMAS
@@ -82,3 +90,4 @@ class PaymentResponse(PaymentCreate):
 
     class Config:
         from_attributes = True
+
