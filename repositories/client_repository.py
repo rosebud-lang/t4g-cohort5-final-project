@@ -1,13 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Client
+from sqlalchemy.exc import IntegrityError
 
-class ClientRepository:
-    """Handles all database operations for clients."""
-
-    def __init__(self, db: Session):
-        self.db = db
-
-from sqlalchemy.orm import Session
 from models import Client
 
 
@@ -21,11 +14,16 @@ class ClientRepository:
     def create_client(self, client):
         """Save a new client to the database."""
 
-        self.db.add(client)
-        self.db.commit()
-        self.db.refresh(client)
+        try:
+            self.db.add(client)
+            self.db.commit()
+            self.db.refresh(client)
 
-        return client
+            return client
+
+        except IntegrityError:
+            self.db.rollback()
+            raise
 
 
     def get_all_clients(self):
@@ -48,10 +46,15 @@ class ClientRepository:
     def update_client(self, client):
         """Commit updated client information."""
 
-        self.db.commit()
-        self.db.refresh(client)
+        try:
+            self.db.commit()
+            self.db.refresh(client)
 
-        return client
+            return client
+
+        except IntegrityError:
+            self.db.rollback()
+            raise
 
 
     def delete_client(self, client):

@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status
+from sqlalchemy.exc import IntegrityError
 
 from models import Client
 from repositories.client_repository import ClientRepository
@@ -21,7 +22,14 @@ class ClientService:
             organization_name=client_data.organization_name
         )
 
-        return self.repository.create_client(new_client)
+        try:
+            return self.repository.create_client(new_client)
+
+        except IntegrityError:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="A client with this email already exists."
+            )
 
 
     def get_all_clients(self):
@@ -61,7 +69,14 @@ class ClientService:
         if client_data.organization_name is not None:
             client.organization_name = client_data.organization_name
 
-        return self.repository.update_client(client)
+        try:
+            return self.repository.update_client(client)
+
+        except IntegrityError:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="A client with this email already exists."
+            )
 
 
     def delete_client(self, client_id):
@@ -71,4 +86,6 @@ class ClientService:
 
         self.repository.delete_client(client)
 
-        return {"message": "Client deleted successfully."}
+        return {
+            "message": "Client deleted successfully."
+        }
