@@ -61,4 +61,5 @@ class ClientRepository:
         """Delete a client."""
 
         self.db.delete(client)
-        self.db.commit()
+        self.db.commit() 
+        
