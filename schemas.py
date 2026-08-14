@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel, Field
 from typing import Optional
 
@@ -40,20 +41,25 @@ class OrderCreate(BaseModel):
     """Schema for creating a new embroidery order."""
 
     client_id: str
-
     customer_type: str
-
     item_type: str
-
     design_description: str
-
     quantity: int = Field(..., gt=0)
-
     total_amount: float = Field(..., gt=0)
+    due_date: Optional[date] = None
+    status: str = "awaiting_deposit"
 
-    due_date: Optional[str] = None
 
-    status: Optional[str] = "awaiting_deposit"
+class OrderUpdate(BaseModel):
+    """Schema for updating selected order information."""
+
+    customer_type: Optional[str] = None
+    item_type: Optional[str] = None
+    design_description: Optional[str] = None
+    quantity: Optional[int] = Field(None, gt=0)
+    total_amount: Optional[float] = Field(None, gt=0)
+    due_date: Optional[date] = None
+    status: Optional[str] = None
 
 
 class OrderResponse(OrderCreate):
@@ -73,14 +79,10 @@ class PaymentCreate(BaseModel):
     """Schema for recording a payment."""
 
     order_id: str
-
     amount: float = Field(..., gt=0)
-
     payment_type: str
-
     payment_method: str
-
-    payment_date: str
+    payment_date: date
 
 
 class PaymentResponse(PaymentCreate):
