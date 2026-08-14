@@ -84,6 +84,14 @@ class PaymentCreate(BaseModel):
     payment_method: str
     payment_date: date
 
+class PaymentUpdate(BaseModel):
+    """Schema for updating selected payment information."""
+
+    amount: Optional[float] = Field(None, gt=0)
+    payment_type: Optional[str] = None
+    payment_method: Optional[str] = None
+    payment_date: Optional[date] = None 
+
 
 class PaymentResponse(PaymentCreate):
     """Schema returned after recording a payment."""
